@@ -15,29 +15,6 @@ public interface Expression {
 
   @NotNull Type expressionType();
 
-  default void setValues(final @NotNull Map<Character, Val> values) {
-    if (expressionType() == Type.VAR) {
-      final VariableExpression var = (VariableExpression) this;
-      var.val(values.get(var.id()));
-      return;
-    }
-
-    if (expressionType() == Type.OPERATION) {
-      final Operation op = (Operation) this;
-      if (op.operationType() == Operation.Type.BINARY) {
-        final BinaryOperation binOp = (BinaryOperation) op;
-        binOp.firstExpression()
-          .setValues(values);
-        binOp.secondExpression()
-          .setValues(values);
-      } else {
-        final UnaryOperation unOp = (UnaryOperation) op;
-        unOp.expression()
-          .setValues(values);
-      }
-    }
-  }
-
   default @NotNull List<NameOperation> extractNamedExpressions() {
     final var expressions = new ArrayList<NameOperation>();
     final var aliasesIndexes = new AtomicInteger(0);

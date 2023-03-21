@@ -3,33 +3,11 @@ package com.pixeldv.truthtables.representation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class VariableExpression implements Expression {
-  private final char id;
-  private final AtomicReference<Val> val;
-
-  public VariableExpression(final char id) {
-    this.id = id;
-    this.val = new AtomicReference<>(Val.UNDEFINED);
-  }
-
-  VariableExpression(final char id, final @NotNull AtomicReference<Val> val) {
-    this.id = id;
-    this.val = val;
-  }
-
+public record VariableExpression(char id) implements Expression {
   @Override
   public @NotNull Val eval(final @NotNull Map<Character, Val> values) {
-    return values.getOrDefault(this.id, this.val.get());
-  }
-
-  public void val(final @NotNull Val val) {
-    this.val.set(val);
-  }
-
-  public char id() {
-    return this.id;
+    return values.getOrDefault(this.id, Val.UNDEFINED);
   }
 
   @Override
@@ -44,6 +22,6 @@ public class VariableExpression implements Expression {
 
   @Override
   public @NotNull VariableExpression clone() {
-    return new VariableExpression(this.id, this.val);
+    return new VariableExpression(this.id);
   }
 }
