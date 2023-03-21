@@ -1,6 +1,11 @@
 package com.pixeldv.truthtables.resolve;
 
 import com.pixeldv.truthtables.lexer.Token;
+import com.pixeldv.truthtables.representation.AndOperation;
+import com.pixeldv.truthtables.representation.IfOnlyIfOperation;
+import com.pixeldv.truthtables.representation.IfOperation;
+import com.pixeldv.truthtables.representation.NegationOperation;
+import com.pixeldv.truthtables.representation.OrOperation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Deque;
@@ -13,26 +18,27 @@ public class OperationResolver {
   public static final Map<String, Character> UNARY_OPERATIONS = new HashMap<>();
 
   static {
-    BINARY_OPERATIONS.put("and", '∧');
-    BINARY_OPERATIONS.put("or", '∨');
-    BINARY_OPERATIONS.put("|", '∨');
-    BINARY_OPERATIONS.put("^", '∧');
-    BINARY_OPERATIONS.put("v", '∨');
-    BINARY_OPERATIONS.put("bic", '↔');
-    BINARY_OPERATIONS.put("cond", '→');
-    BINARY_OPERATIONS.put("->", '→');
-    BINARY_OPERATIONS.put("<->", '↔');
-    BINARY_OPERATIONS.put(">", '→');
-    BINARY_OPERATIONS.put("<", '↔');
-    BINARY_OPERATIONS.put("∧", '∧');
-    BINARY_OPERATIONS.put("∨", '∨');
-    BINARY_OPERATIONS.put("↔", '↔');
-    BINARY_OPERATIONS.put("→", '→');
+    BINARY_OPERATIONS.put("and", AndOperation.SYMBOL);
+    BINARY_OPERATIONS.put("&", AndOperation.SYMBOL);
+    BINARY_OPERATIONS.put("^", AndOperation.SYMBOL);
+    BINARY_OPERATIONS.put("∧", AndOperation.SYMBOL);
+    BINARY_OPERATIONS.put("or", OrOperation.SYMBOL);
+    BINARY_OPERATIONS.put("|", OrOperation.SYMBOL);
+    BINARY_OPERATIONS.put("∨", OrOperation.SYMBOL);
+    BINARY_OPERATIONS.put("v", OrOperation.SYMBOL);
+    BINARY_OPERATIONS.put("cond", IfOperation.SYMBOL);
+    BINARY_OPERATIONS.put("->", IfOperation.SYMBOL);
+    BINARY_OPERATIONS.put(">", IfOperation.SYMBOL);
+    BINARY_OPERATIONS.put("→", IfOperation.SYMBOL);
+    BINARY_OPERATIONS.put("bic", IfOnlyIfOperation.SYMBOL);
+    BINARY_OPERATIONS.put("<->", IfOnlyIfOperation.SYMBOL);
+    BINARY_OPERATIONS.put("<", IfOnlyIfOperation.SYMBOL);
+    BINARY_OPERATIONS.put("↔", IfOnlyIfOperation.SYMBOL);
 
-    UNARY_OPERATIONS.put("not", '¬');
-    UNARY_OPERATIONS.put("!", '¬');
-    UNARY_OPERATIONS.put("~", '¬');
-    UNARY_OPERATIONS.put("¬", '¬');
+    UNARY_OPERATIONS.put("not", NegationOperation.SYMBOL);
+    UNARY_OPERATIONS.put("!", NegationOperation.SYMBOL);
+    UNARY_OPERATIONS.put("~", NegationOperation.SYMBOL);
+    UNARY_OPERATIONS.put("¬", NegationOperation.SYMBOL);
   }
 
   private final String input;
