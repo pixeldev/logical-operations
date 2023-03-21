@@ -1,0 +1,25 @@
+package com.pixeldv.truthtables.representation;
+
+import org.jetbrains.annotations.NotNull;
+
+public record GroupOperation(@NotNull Expression expression) implements UnaryOperation {
+  @Override
+  public @NotNull Val eval() {
+    return this.expression.eval();
+  }
+
+  @Override
+  public @NotNull String readableForm() {
+    return "(" + this.expression.readableForm() + ")";
+  }
+
+  @Override
+  public @NotNull Type unaryOperationType() {
+    return Type.GROUP;
+  }
+
+  @Override
+  public @NotNull GroupOperation clone() {
+    return new GroupOperation(this.expression);
+  }
+}
