@@ -21,10 +21,11 @@ public class Main {
      *
      * (([ ]p [ ] q) [ ] (p [ ] r)) [ ] [ ](r [ ] q) --> funciona
      */
+    final var input = "((p ^ q) ^ ~r) > (~p < ~s)";
     final var specifiedTokenizer = new SpecifiedLogicalTokenizer();
-    final var specifiedTokens = specifiedTokenizer.tokenize("((p ^ q) v r) ^ (~p < ~s)");
+    final var specifiedTokens = specifiedTokenizer.tokenize(input);
 
-    //    OperationResolver operationResolver = new OperationResolver(input, lexer.tokens());
+    //    OperationResolver operationResolver = new OperationResolver(input, specifiedTokens);
     //    operationResolver.scan(new Scanner(System.in));
 
     //    final var resolvedExpression = ExpressionParser.parse(new LinkedList<>(resolvableTokens));
