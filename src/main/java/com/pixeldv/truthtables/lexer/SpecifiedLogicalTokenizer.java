@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Deque;
 
 public class SpecifiedLogicalTokenizer extends LogicalTokenizer {
+  public static final LogicalTokenizer INSTANCE = new SpecifiedLogicalTokenizer();
+
   @Override
   protected @Nullable Token handleDefaultCase(
     final @NotNull String input,

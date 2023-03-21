@@ -1,12 +1,14 @@
 package com.pixeldv.truthtables;
 
-import com.pixeldv.truthtables.lexer.SpecifiedLogicalTokenizer;
+import com.pixeldv.truthtables.lexer.ResolvableLogicalTokenizer;
 import com.pixeldv.truthtables.parser.ExpressionParser;
+import com.pixeldv.truthtables.resolve.OperationResolver;
 import com.pixeldv.truthtables.table.TruthTable;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class Main {
 
@@ -21,12 +23,12 @@ public class Main {
      *
      * (([ ]p [ ] q) [ ] (p [ ] r)) [ ] [ ](r [ ] q) --> funciona
      */
-    final var input = "((p ^ q) ^ ~r) > (~p < ~s)";
-    final var specifiedTokenizer = new SpecifiedLogicalTokenizer();
+    final var input = "((p [ ] q) [ ] [ ]r) [ ] ([ ]p [ ] [ ]s)";
+    final var specifiedTokenizer = new ResolvableLogicalTokenizer();
     final var specifiedTokens = specifiedTokenizer.tokenize(input);
 
-    //    OperationResolver operationResolver = new OperationResolver(input, specifiedTokens);
-    //    operationResolver.scan(new Scanner(System.in));
+    OperationResolver operationResolver = new OperationResolver(input, specifiedTokens);
+    operationResolver.scan(new Scanner(System.in));
 
     //    final var resolvedExpression = ExpressionParser.parse(new LinkedList<>(resolvableTokens));
     final var specifiedExpression = ExpressionParser.parse(new LinkedList<>(specifiedTokens));

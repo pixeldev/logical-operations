@@ -4,9 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Deque;
-import java.util.LinkedList;
 
 public class ResolvableLogicalTokenizer extends LogicalTokenizer {
+  public static final LogicalTokenizer RESOLVABLE = new ResolvableLogicalTokenizer();
+
   @Override
   protected @Nullable Token handleDefaultCase(
     final @NotNull String input,
