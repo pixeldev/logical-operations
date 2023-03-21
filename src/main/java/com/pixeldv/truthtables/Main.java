@@ -64,7 +64,7 @@ public class Main {
 
     System.out.println("Resolved expression: " + resolvedExpression.readableForm());
     System.out.println("Specified expression: " +specifiedExpression.readableForm());
-    System.out.println("Equivalent: " + resolvedExpression.readableForm().equals(specifiedExpression.readableForm()));
+    System.out.println("Equivalent: " + resolvedExpression.equivalent(specifiedExpression));
 
 //    final var variables = tokens.stream()
 //                            .filter(token -> token.type() == Token.Type.VAR)

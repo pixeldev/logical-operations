@@ -71,6 +71,10 @@ public interface Expression {
 
   @NotNull Expression clone();
 
+  default boolean equivalent(final @NotNull Expression other) {
+    return this.readableForm().equals(other.readableForm());
+  }
+
   enum Val {V, F, UNDEFINED}
 
   enum Type {OPERATION, VAR}
