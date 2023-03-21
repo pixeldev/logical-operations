@@ -1,6 +1,7 @@
 package com.pixeldv.truthtables;
 
 import com.pixeldv.truthtables.lexer.ResolvableLogicalTokenizer;
+import com.pixeldv.truthtables.lexer.SpecifiedLogicalTokenizer;
 import com.pixeldv.truthtables.parser.ExpressionParser;
 import com.pixeldv.truthtables.resolve.OperationResolver;
 import com.pixeldv.truthtables.table.TruthTable;
@@ -14,33 +15,55 @@ public class Main {
 
   public static void main(String[] args) {
     System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
-    /*"([ ]([ ]p [ ] q) [ ] (p [ ] r)) [ ] [ ](r [ ] q)" --> funciona
-     *"([ ](p [ ] [ ]q) [ ] (p [ ] r)) [ ] [ ](r [ ] q)" --> funciona
-     *"([ ]p [ ] q) [ ] (p [ ] [ ]r)" --> funciona
-     * (p [ ] q [ ] r) [ ] ([ ]p [ ] [ ]s) --> funciona
-     *
-     * "((~p ^ q) v (p v r)) ^ ~(r ^ q)"
-     *
-     * (([ ]p [ ] q) [ ] (p [ ] r)) [ ] [ ](r [ ] q) --> funciona
-     */
-    final var input = "((p [ ] q) [ ] [ ]r) [ ] ([ ]p [ ] [ ]s)";
-    final var specifiedTokenizer = new ResolvableLogicalTokenizer();
+
+    System.out.println("Welcome to the truth table generator!");
+    System.out.println("Please, choose an option for the logical expression:");
+    System.out.println(
+      "1. Specify the logical expression using operators. For example: (a and b) or (c and d)");
+    System.out.println(
+      "2. Fill out the logical operators in the expression. For example: (a [ ] b) [ ] (c [ ] d)");
+
+    final var scanner = new Scanner(System.in).useDelimiter("\n");
+    int option;
+    do {
+      try {
+        System.out.print("Enter an option: \n>> ");
+        final var input = scanner.next();
+        option = Integer.parseInt(input);
+
+        if (option != 1 && option != 2) {
+          System.out.println("Please, enter a valid option.");
+          option = 0;
+        }
+      } catch (Exception e) {
+        System.out.println("Please, enter a valid option.");
+        option = 0;
+      }
+    } while (option == 0);
+
+    final var specifiedTokenizer = option == 1 ?
+                                   SpecifiedLogicalTokenizer.INSTANCE :
+                                   ResolvableLogicalTokenizer.INSTANCE;
+
+    System.out.println("Please, enter the logical expression:");
+    if (option == 1) {
+      System.out.println(
+        "Use the following binary operators: " + OperationResolver.BINARY_OPERATORS);
+      System.out.println("Use the following unary operators: " + OperationResolver.UNARY_OPERATORS);
+    }
+    System.out.print(">> ");
+    final var input = scanner.next();
     final var specifiedTokens = specifiedTokenizer.tokenize(input);
 
-    OperationResolver operationResolver = new OperationResolver(input, specifiedTokens);
-    operationResolver.scan(new Scanner(System.in));
+    if (option == 2) {
+      final var operationResolver = new OperationResolver(input, specifiedTokens);
+      operationResolver.scan(scanner);
+    }
 
-    //    final var resolvedExpression = ExpressionParser.parse(new LinkedList<>(resolvableTokens));
     final var specifiedExpression = ExpressionParser.parse(new LinkedList<>(specifiedTokens));
 
-    //    if (resolvedExpression == null || specifiedExpression == null) {
-    //      throw new IllegalStateException("Invalid expression");
-    //    }
-
-    //    System.out.println("Resolved expression: " + resolvedExpression.readableForm());
     System.out.println("Specified expression: " + specifiedExpression.readableForm());
-    //    System.out.println("Equivalent: " + resolvedExpression.equivalent(specifiedExpression));
-    //
+    System.out.println("\nTruth table: ");
     System.out.println(new TruthTable(specifiedTokens, specifiedExpression).createTruthTable());
   }
 }

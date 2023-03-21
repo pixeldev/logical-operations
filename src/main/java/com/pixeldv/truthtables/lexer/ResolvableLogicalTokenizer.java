@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Deque;
 
 public class ResolvableLogicalTokenizer extends LogicalTokenizer {
-  public static final LogicalTokenizer RESOLVABLE = new ResolvableLogicalTokenizer();
+  public static final LogicalTokenizer INSTANCE = new ResolvableLogicalTokenizer();
 
   @Override
   protected @Nullable Token handleDefaultCase(

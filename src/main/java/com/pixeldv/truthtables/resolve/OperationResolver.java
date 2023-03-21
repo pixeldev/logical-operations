@@ -9,41 +9,34 @@ import com.pixeldv.truthtables.representation.OrOperation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Deque;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 public class OperationResolver {
-  public static final Map<String, Character> BINARY_OPERATIONS = new HashMap<>();
-  public static final Map<String, Character> UNARY_OPERATIONS = new HashMap<>();
-  private static final String BINARY_OPERATORS;
-  private static final String UNARY_OPERATORS;
+  public static final Map<String, Character> BINARY_OPERATIONS = new LinkedHashMap<>();
+  public static final Map<String, Character> UNARY_OPERATIONS = new LinkedHashMap<>();
+  public static final String BINARY_OPERATORS;
+  public static final String UNARY_OPERATORS;
 
   static {
-    BINARY_OPERATIONS.put("and", AndOperation.SYMBOL);
     BINARY_OPERATIONS.put("y", AndOperation.SYMBOL);
     BINARY_OPERATIONS.put("&", AndOperation.SYMBOL);
     BINARY_OPERATIONS.put("^", AndOperation.SYMBOL);
     BINARY_OPERATIONS.put("∧", AndOperation.SYMBOL);
-    BINARY_OPERATIONS.put("or", OrOperation.SYMBOL);
     BINARY_OPERATIONS.put("o", OrOperation.SYMBOL);
     BINARY_OPERATIONS.put("|", OrOperation.SYMBOL);
     BINARY_OPERATIONS.put("∨", OrOperation.SYMBOL);
     BINARY_OPERATIONS.put("v", OrOperation.SYMBOL);
-    BINARY_OPERATIONS.put("si", IfOperation.SYMBOL);
     BINARY_OPERATIONS.put("->", IfOperation.SYMBOL);
     BINARY_OPERATIONS.put(">", IfOperation.SYMBOL);
     BINARY_OPERATIONS.put("→", IfOperation.SYMBOL);
-    BINARY_OPERATIONS.put("sisolosi", IfOnlyIfOperation.SYMBOL);
     BINARY_OPERATIONS.put("<->", IfOnlyIfOperation.SYMBOL);
     BINARY_OPERATIONS.put("<", IfOnlyIfOperation.SYMBOL);
     BINARY_OPERATIONS.put("↔", IfOnlyIfOperation.SYMBOL);
 
     BINARY_OPERATORS = String.join(", ", BINARY_OPERATIONS.keySet());
 
-    UNARY_OPERATIONS.put("not", NegationOperation.SYMBOL);
-    UNARY_OPERATIONS.put("no", NegationOperation.SYMBOL);
-    UNARY_OPERATIONS.put("negacion", NegationOperation.SYMBOL);
     UNARY_OPERATIONS.put("!", NegationOperation.SYMBOL);
     UNARY_OPERATIONS.put("~", NegationOperation.SYMBOL);
     UNARY_OPERATIONS.put("¬", NegationOperation.SYMBOL);
@@ -68,12 +61,12 @@ public class OperationResolver {
         case BINARY_OPERATOR -> {
           System.out.println("\n" + input);
           System.out.println(" ".repeat(token.index() - 1) + "^");
-          System.out.print("Enter a value: (" + BINARY_OPERATORS + ") \n>> ");
+          System.out.print("Ingresa un valor: (" + BINARY_OPERATORS + ") \n>> ");
           Character character;
           do {
             character = BINARY_OPERATIONS.get(scanner.next());
             if (character == null) {
-              System.out.print("Invalid value. Try again:\n>> ");
+              System.out.print("Valor inválido. Intenta de nuevo:\n>> ");
             }
           } while (character == null);
           token.setToken(character);
@@ -81,11 +74,13 @@ public class OperationResolver {
         case UNARY_OPERATOR -> {
           System.out.println("\n" + input);
           System.out.println(" ".repeat(token.index() - 1) + "^");
-          System.out.print("Enter a value: (" + UNARY_OPERATORS + "). \nIf you want to remove this unary operator type other value. \n>> ");
+          System.out.print("Ingresa un valor: (" + UNARY_OPERATORS +
+                           "). \nSi quieres remover este operador coloca cualquier otro valor. \n>>" +
+                           " ");
           final var character = UNARY_OPERATIONS.get(scanner.next());
           if (character == null) {
             iterator.remove();
-            System.out.println("Removed unary operator.");
+            System.out.println("Operador eliminado correctamente.");
             continue;
           }
           token.setToken(character);

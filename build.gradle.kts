@@ -9,7 +9,7 @@ tasks {
 
   jar {
     manifest {
-      attributes["Main-Class"] = "com.pixeldv.truthtables.Main"
+      attributes["Main-Class"] = "com.pixeldv.truthtables.Bootstrap"
     }
   }
 }
