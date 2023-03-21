@@ -3,6 +3,7 @@ package com.pixeldv.truthtables.representation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 
 public class NameOperation implements UnaryOperation {
   private static final List<Character> ALIASES = List.of(
@@ -35,8 +36,8 @@ public class NameOperation implements UnaryOperation {
   }
 
   @Override
-  public @NotNull Val eval() {
-    return this.expression.eval();
+  public @NotNull Val eval(final @NotNull Map<Character, Val> values) {
+    return this.expression.eval(values);
   }
 
   @Override

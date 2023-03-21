@@ -2,6 +2,8 @@ package com.pixeldv.truthtables.representation;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 public record IfOperation(@NotNull Expression firstExpression, @NotNull Expression secondExpression)
   implements BinaryOperation {
   public static final char SYMBOL = '→';
@@ -12,9 +14,9 @@ public record IfOperation(@NotNull Expression firstExpression, @NotNull Expressi
   }
 
   @Override
-  public @NotNull Val eval() {
-    return this.firstExpression.eval() == Val.V ?
-           this.secondExpression.eval() == Val.F ?
+  public @NotNull Val eval(final @NotNull Map<Character, Val> values) {
+    return this.firstExpression.eval(values) == Val.V ?
+           this.secondExpression.eval(values) == Val.F ?
            Val.F :
            Val.V :
            Val.V;

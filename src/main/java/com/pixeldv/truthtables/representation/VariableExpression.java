@@ -2,6 +2,7 @@ package com.pixeldv.truthtables.representation;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class VariableExpression implements Expression {
@@ -19,8 +20,8 @@ public class VariableExpression implements Expression {
   }
 
   @Override
-  public @NotNull Val eval() {
-    return this.val.get();
+  public @NotNull Val eval(final @NotNull Map<Character, Val> values) {
+    return values.getOrDefault(this.id, this.val.get());
   }
 
   public void val(final @NotNull Val val) {

@@ -2,10 +2,12 @@ package com.pixeldv.truthtables.representation;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 public record GroupOperation(@NotNull Expression expression) implements UnaryOperation {
   @Override
-  public @NotNull Val eval() {
-    return this.expression.eval();
+  public @NotNull Val eval(final @NotNull Map<Character, Val> values) {
+    return this.expression.eval(values);
   }
 
   @Override

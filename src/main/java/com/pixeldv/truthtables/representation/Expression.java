@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public interface Expression {
 
-  @NotNull Val eval();
+  @NotNull Val eval(final @NotNull Map<Character, Val> values);
 
   @NotNull String readableForm();
 

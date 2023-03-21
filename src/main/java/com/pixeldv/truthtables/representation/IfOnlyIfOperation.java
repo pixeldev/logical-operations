@@ -2,6 +2,8 @@ package com.pixeldv.truthtables.representation;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 public record IfOnlyIfOperation(
   @NotNull Expression firstExpression,
   @NotNull Expression secondExpression
@@ -14,8 +16,8 @@ public record IfOnlyIfOperation(
   }
 
   @Override
-  public @NotNull Val eval() {
-    return this.firstExpression.eval() == this.secondExpression.eval() ?
+  public @NotNull Val eval(final @NotNull Map<Character, Val> values) {
+    return this.firstExpression.eval(values) == this.secondExpression.eval(values) ?
            Val.V :
            Val.F;
   }
