@@ -8,21 +8,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Deque;
 import java.util.LinkedList;
 
-public class Parser {
-  public Parser() {
+public final class Parser {
+  private Parser() {
+    throw new UnsupportedOperationException("This class cannot be instantiated.");
   }
 
-  public @Nullable Expression parse(final @NotNull Deque<Token> tokens) {
+  public static @Nullable Expression parse(final @NotNull Deque<Token> tokens) {
     if (tokens.isEmpty()) {
       throw new IllegalStateException("Empty token list");
     }
-
     final var operandStack = new LinkedList<Expression>();
     final var operationsStack = new LinkedList<Token>();
     Expression expression = null;
     Token lastOperation;
     Token token = null;
-
     while (!tokens.isEmpty()) {
       token = tokens.removeFirst();
       if (token.unresolved()) {
@@ -49,14 +48,14 @@ public class Parser {
       switch (tokenType) {
         case VAR -> {
           expression = new VariableExpression(token.token());
-          expression = this.createExpressionAndStack(operandStack, expression, lastOperation);
+          expression = createExpressionAndStack(operandStack, expression, lastOperation);
         }
         case LEFT_PARENTHESIS -> {
-          expression = this.parse(tokens);
+          expression = parse(tokens);
           if (expression == null) {
             throw new IllegalStateException("Empty parenthesis at " + token.index() + ".");
           }
-          expression = this.createExpressionAndStack(operandStack, expression, lastOperation);
+          expression = createExpressionAndStack(operandStack, expression, lastOperation);
         }
         case UNARY_OPERATOR -> operationsStack.addLast(token);
         case BINARY_OPERATOR -> {
@@ -72,7 +71,7 @@ public class Parser {
         throw new IllegalStateException("Remaining operands without any operator.");
       }
       lastOperation = operationsStack.pollLast();
-      expression = this.createExpression(operandStack, expression, lastOperation);
+      expression = createExpression(operandStack, expression, lastOperation);
       if(token.type() == Token.Type.RIGHT_PARENTHESIS){
         expression = new GroupOperation(expression);
       }
@@ -80,7 +79,7 @@ public class Parser {
     return expression;
   }
 
-  private @NotNull Expression createExpression(
+  private static @NotNull Expression createExpression(
     final @NotNull Deque<Expression> operandStack,
     @NotNull Expression expression,
     final @NotNull Token lastOperation
@@ -118,14 +117,14 @@ public class Parser {
     return expression;
   }
 
-  private @NotNull Expression createExpressionAndStack(
+  private static @NotNull Expression createExpressionAndStack(
     final @NotNull Deque<Expression> operandStack,
     final @NotNull Expression expression,
     final @Nullable Token lastOperation
   ) {
     operandStack.add(expression);
     if (lastOperation != null) {
-      return this.createExpression(operandStack, expression, lastOperation);
+      return createExpression(operandStack, expression, lastOperation);
     }
     return expression;
   }

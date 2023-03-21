@@ -5,8 +5,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Deque;
 import java.util.LinkedList;
 
-public class Lexer {
-  public @NotNull Deque<Token> tokenize(final @NotNull String input) {
+public final class Lexer {
+  private Lexer() {
+    throw new UnsupportedOperationException("This class cannot be instantiated.");
+  }
+
+  public static @NotNull Deque<Token> tokenize(final @NotNull String input) {
     final var tokens = new LinkedList<Token>();
     final var parenthesis = new LinkedList<Token>();
     Token operationPending = null;

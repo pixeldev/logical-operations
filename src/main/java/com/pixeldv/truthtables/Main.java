@@ -23,8 +23,7 @@ public class Main {
      * (([ ]p [ ] q) [ ] (p [ ] r)) [ ] [ ](r [ ] q)
      */
     final var input = "(([ ]p [ ] q) [ ] (p [ ] r)) [ ] [ ](r [ ] q)";
-    Lexer lexer = new Lexer();
-    final var tokens = lexer.tokenize(input);
+    final var tokens = Lexer.tokenize(input);
 
     //    List<Character> operations = List.of('∧', '¬');
     //    List<Character> operations = List.of('¬', '¬', '∧', '∨', '∨', '∧', '¬', '∧');
@@ -49,13 +48,13 @@ public class Main {
     // (~(~p ^ q) v (p v -r)) ^ ~(r ^ q)
     // (~(~p ^ q) v (p v -r)) ^ (r ^ q)
     //
-
-    Parser parser = new Parser();
-    final var expression = parser.parse(new LinkedList<>(tokens));
+    final var expression = Parser.parse(new LinkedList<>(tokens));
 
     if (expression == null) {
       throw new IllegalStateException("Invalid expression");
     }
+
+    System.out.println("Expresión: " + expression.readableForm());
 
     final var variables = tokens.stream()
                             .filter(token -> token.type() == Token.Type.VAR)
