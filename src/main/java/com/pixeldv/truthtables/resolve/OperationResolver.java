@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class OperationResolver {
-  private static final Map<String, Character> BINARY_OPERATIONS = new HashMap<>();
-  private static final Map<String, Character> UNARY_OPERATIONS = new HashMap<>();
+  public static final Map<String, Character> BINARY_OPERATIONS = new HashMap<>();
+  public static final Map<String, Character> UNARY_OPERATIONS = new HashMap<>();
 
   static {
     BINARY_OPERATIONS.put("and", '∧');
@@ -21,6 +21,8 @@ public class OperationResolver {
     BINARY_OPERATIONS.put("cond", '→');
     BINARY_OPERATIONS.put("->", '→');
     BINARY_OPERATIONS.put("<->", '↔');
+    BINARY_OPERATIONS.put(">", '→');
+    BINARY_OPERATIONS.put("<", '↔');
     BINARY_OPERATIONS.put("∧", '∧');
     BINARY_OPERATIONS.put("∨", '∨');
     BINARY_OPERATIONS.put("↔", '↔');
