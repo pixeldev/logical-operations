@@ -1,16 +1,13 @@
 package com.pixeldv.truthtables.lexer;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Deque;
 import java.util.LinkedList;
 
-public final class Lexer {
-  private Lexer() {
-    throw new UnsupportedOperationException("This class cannot be instantiated.");
-  }
-
-  public static @NotNull Deque<Token> tokenize(final @NotNull String input) {
+public abstract class LogicalTokenizer {
+  public @NotNull Deque<Token> tokenize(final @NotNull String input) {
     final var tokens = new LinkedList<Token>();
     final var parenthesis = new LinkedList<Token>();
     Token operationPending = null;
@@ -34,27 +31,15 @@ public final class Lexer {
           }
           Token lastParenthesis = parenthesis.removeLast();
           if (lastParenthesis.equals(tokens.peekLast())) {
-            throw new IllegalStateException("Empty parenthesis at " + lastParenthesis.index() + ".");
+            throw new IllegalStateException(
+              "Empty parenthesis at " + lastParenthesis.index() + ".");
           }
           tokens.add(new Token(val, i, Token.Type.RIGHT_PARENTHESIS));
         }
-        case '[' -> {
-          if (!Character.isSpaceChar(input.charAt(++i)) || input.charAt(++i) != ']') {
-            throw new IllegalStateException(
-              "Invalid operation at " + (i - 2) + ". Format should be: [ ]");
-          }
-          Token lastToken = tokens.peekLast();
-          if (Character.isSpaceChar(input.charAt(i + 1)) && lastToken != null) {
-            if (lastToken.type() != Token.Type.RIGHT_PARENTHESIS &&
-                lastToken.type() != Token.Type.VAR) {
-              throw new IllegalStateException("Invalid binary operation at " + lastToken.index());
-            }
-            tokens.add(operationPending = new Token(
-              val,
-              i,
-              Token.Type.BINARY_OPERATOR));
-          } else {
-            tokens.add(operationPending = new Token(val, i, Token.Type.UNARY_OPERATOR));
+        default -> {
+          operationPending = this.handleDefaultCase(input, i, val, tokens);
+          if (operationPending != null) {
+            i = operationPending.index();
           }
         }
       }
@@ -69,4 +54,11 @@ public final class Lexer {
     }
     return tokens;
   }
+
+  protected abstract @Nullable Token handleDefaultCase(
+    final @NotNull String input,
+    final int index,
+    final char val,
+    final @NotNull Deque<Token> tokens
+  );
 }

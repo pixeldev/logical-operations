@@ -1,8 +1,9 @@
 package com.pixeldv.truthtables;
 
-import com.pixeldv.truthtables.lexer.Lexer;
+import com.pixeldv.truthtables.lexer.ResolvableLogicalTokenizer;
+import com.pixeldv.truthtables.lexer.SpecifiedLogicalTokenizer;
 import com.pixeldv.truthtables.lexer.Token;
-import com.pixeldv.truthtables.parser.Parser;
+import com.pixeldv.truthtables.parser.ExpressionParser;
 import com.pixeldv.truthtables.representation.Expression;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,24 +17,30 @@ public class Main {
   public static void main(String[] args) {
     System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
     /*"([ ]([ ]p [ ] q) [ ] (p [ ] r)) [ ] [ ](r [ ] q)" --> funciona
-     *"([ ](p [ ] [ ]q) [ ] (p [ ] r)) [ ] [ ](r [ ] q)" --> falla
-     *"([ ]p [ ] q) [ ] (p [ ] [ ]r)" --> falla
-     * (p [ ] q [ ] r) [ ] ([ ]p [ ] [ ]s)
+     *"([ ](p [ ] [ ]q) [ ] (p [ ] r)) [ ] [ ](r [ ] q)" --> funciona
+     *"([ ]p [ ] q) [ ] (p [ ] [ ]r)" --> funciona
+     * (p [ ] q [ ] r) [ ] ([ ]p [ ] [ ]s) --> funciona
      *
-     * (([ ]p [ ] q) [ ] (p [ ] r)) [ ] [ ](r [ ] q)
+     * (([ ]p [ ] q) [ ] (p [ ] r)) [ ] [ ](r [ ] q) --> funciona
      */
-    final var input = "(([ ]p [ ] q) [ ] (p [ ] r)) [ ] [ ](r [ ] q)";
-    final var tokens = Lexer.tokenize(input);
+//    final var input = "(([ ]p [ ] q) [ ] (p [ ] r)) [ ] [ ](r [ ] q)";
+//    final var tokenizer = new SpecifiedLogicalTokenizer();
+//    final var tokens = tokenizer.tokenize("((¬p ∧ q) ∨ (p ∨ r)) ∧ ¬(r ∧ q)");
+    final var resolvableTokenizer = new ResolvableLogicalTokenizer();
+    final var resolvableTokens = resolvableTokenizer.tokenize("([ ]p [ ] q) [ ] (p [ ] [ ]r)");
+    final var specifiedTokenizer = new SpecifiedLogicalTokenizer();
+    final var specifiedTokens = specifiedTokenizer.tokenize("(¬p ∧ q) ∨ (p ∨ ¬r)");
 
     //    List<Character> operations = List.of('∧', '¬');
     //    List<Character> operations = List.of('¬', '¬', '∧', '∨', '∨', '∧', '¬', '∧');
-    List<Character> operations = List.of('¬', '∧', '∨', '∨', '∧', '¬', '∧');
+//    List<Character> operations = List.of('¬', '∧', '∨', '∨', '∧', '¬', '∧');
+    List<Character> operations = List.of('¬', '∧', '∨', '∨', '¬');
     //    List<Character> operations = List.of('↔', '→');
     //        List<Character> operations = List.of('¬', '∧', '∨', '∨', '¬');
     int index = 0;
     //
-    for (Token token : tokens) {
-      //      System.out.println(token);
+    for (Token token : resolvableTokens) {
+            System.out.println(token);
 
       if (token.unresolved()) {
         token.setToken(operations.get(index++));
@@ -48,20 +55,23 @@ public class Main {
     // (~(~p ^ q) v (p v -r)) ^ ~(r ^ q)
     // (~(~p ^ q) v (p v -r)) ^ (r ^ q)
     //
-    final var expression = Parser.parse(new LinkedList<>(tokens));
+    final var resolvedExpression = ExpressionParser.parse(new LinkedList<>(resolvableTokens));
+    final var specifiedExpression = ExpressionParser.parse(new LinkedList<>(specifiedTokens));
 
-    if (expression == null) {
+    if (resolvedExpression == null || specifiedExpression == null) {
       throw new IllegalStateException("Invalid expression");
     }
 
-    System.out.println("Expresión: " + expression.readableForm());
+    System.out.println("Resolved expression: " + resolvedExpression.readableForm());
+    System.out.println("Specified expression: " +specifiedExpression.readableForm());
+    System.out.println("Equivalent: " + resolvedExpression.readableForm().equals(specifiedExpression.readableForm()));
 
-    final var variables = tokens.stream()
-                            .filter(token -> token.type() == Token.Type.VAR)
-                            .map(Token::token)
-                            .collect(Collectors.toSet());
-
-    List<Map<Character, Expression.Val>> truthValues = generateCombinations(variables);
+//    final var variables = tokens.stream()
+//                            .filter(token -> token.type() == Token.Type.VAR)
+//                            .map(Token::token)
+//                            .collect(Collectors.toSet());
+//
+//    List<Map<Character, Expression.Val>> truthValues = generateCombinations(variables);
 
     /*
                  a      b       c             d               e          f
@@ -77,9 +87,9 @@ public class Main {
      */
 
     // use this to print the 'a' 'b' 'c' 'd' 'e' 'f' 'g' 'h' 'i' 'j' 'k' 'l' 'm' 'n' 'o' columns
-    final var namedExpressions = expression.extractNamedExpressions();
-    final var output = new StringBuilder();
-    System.out.println(output);
+//    final var namedExpressions = resolvedExpression.extractNamedExpressions();
+//    final var output = new StringBuilder();
+//    System.out.println(output);
   }
 
   private static @NotNull List<Map<Character, Expression.Val>> generateCombinations(
