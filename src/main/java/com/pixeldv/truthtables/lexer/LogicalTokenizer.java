@@ -13,11 +13,6 @@ public abstract class LogicalTokenizer {
     Token operationPending = null;
     for (int i = 0; i < input.length(); i++) {
       char val = input.charAt(i);
-      if (val >= 'p' && val <= 'z') {
-        operationPending = null;
-        tokens.add(new Token(val, i, Token.Type.VAR));
-        continue;
-      }
       switch (val) {
         case '(' -> {
           operationPending = null;
@@ -40,6 +35,10 @@ public abstract class LogicalTokenizer {
           operationPending = this.handleDefaultCase(input, i, val, tokens);
           if (operationPending != null) {
             i = operationPending.index();
+            continue;
+          }
+          if (val >= 'p' && val <= 'z') {
+            tokens.add(new Token(val, i, Token.Type.VAR));
           }
         }
       }
