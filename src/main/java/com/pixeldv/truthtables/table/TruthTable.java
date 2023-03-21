@@ -49,6 +49,8 @@ public class TruthTable {
     builder.append(" | ")
       .append(expressionReadableForm).append(" |")
       .append(System.lineSeparator());
+    builder.append("-".repeat(builder.length() - 2))
+      .append(System.lineSeparator());
     final var truthValues = this.generateCombinations();
     for (final Map<Character, Expression.Val> truthValue : truthValues) {
       for (int j = 0; j < prepositionsSize; j++) {
@@ -72,11 +74,16 @@ public class TruthTable {
         builder.append(subExpression.eval(truthValue))
           .append(" ".repeat(readableFormLength / 2 - 1));
       }
-      builder.append(" | ")
-        .append(" ".repeat(expressionReadableFormLength / 2))
+      builder.append(" |");
+      if (expressionReadableFormLength % 2 == 0) {
+        builder.append(" ".repeat(expressionReadableFormLength / 2));
+      } else {
+        builder.append(" ".repeat(expressionReadableFormLength / 2 + 1));
+      }
+      builder
         .append(this.expression.eval(truthValue))
         .append(" ".repeat(expressionReadableFormLength / 2 - 1))
-        .append("|")
+        .append(" |")
         .append(System.lineSeparator());
     }
     return builder.toString();
