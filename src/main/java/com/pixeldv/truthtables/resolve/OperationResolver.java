@@ -15,6 +15,7 @@ public class OperationResolver {
   static {
     BINARY_OPERATIONS.put("and", '∧');
     BINARY_OPERATIONS.put("or", '∨');
+    BINARY_OPERATIONS.put("|", '∨');
     BINARY_OPERATIONS.put("^", '∧');
     BINARY_OPERATIONS.put("v", '∨');
     BINARY_OPERATIONS.put("bic", '↔');
