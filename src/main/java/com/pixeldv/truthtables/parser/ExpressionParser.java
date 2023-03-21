@@ -8,8 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Deque;
 import java.util.LinkedList;
 
-public final class Parser {
-  private Parser() {
+public final class ExpressionParser {
+  private ExpressionParser() {
     throw new UnsupportedOperationException("This class cannot be instantiated.");
   }
 
