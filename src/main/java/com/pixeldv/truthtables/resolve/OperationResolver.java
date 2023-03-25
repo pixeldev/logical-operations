@@ -1,5 +1,6 @@
 package com.pixeldv.truthtables.resolve;
 
+import com.pixeldv.truthtables.color.Colors;
 import com.pixeldv.truthtables.lexer.Token;
 import com.pixeldv.truthtables.representation.AndOperation;
 import com.pixeldv.truthtables.representation.IfOnlyIfOperation;
@@ -52,35 +53,37 @@ public class OperationResolver {
     this.tokens = tokens;
   }
 
-  public void scan(final @NotNull Scanner scanner) {
+  public void resolve(final @NotNull Scanner scanner) {
     final var iterator = tokens.iterator();
-
     while (iterator.hasNext()) {
       final var token = iterator.next();
       switch (token.type()) {
         case BINARY_OPERATOR -> {
-          System.out.println("\n" + input);
-          System.out.println(" ".repeat(token.index() - 1) + "^");
-          System.out.print("Ingresa un valor: (" + BINARY_OPERATORS + ") \n>> ");
+          System.out.println("\n" + Colors.CYAN + input + Colors.RESET);
+          System.out.println(" ".repeat(token.index() - 1) + Colors.GREEN + "^" + Colors.RESET);
+          System.out.print(
+            "Ingresa un valor: (" + Colors.GREEN + BINARY_OPERATORS + Colors.RESET + ") \n>> ");
           Character character;
           do {
             character = BINARY_OPERATIONS.get(scanner.next());
             if (character == null) {
-              System.out.print("Valor inválido. Intenta de nuevo:\n>> ");
+              System.out.print(Colors.RED + "Valor inválido." + Colors.RESET + "\nIntenta de nuevo:\n>> ");
             }
           } while (character == null);
           token.setToken(character);
         }
         case UNARY_OPERATOR -> {
-          System.out.println("\n" + input);
-          System.out.println(" ".repeat(token.index() - 1) + "^");
-          System.out.print("Ingresa un valor: (" + UNARY_OPERATORS +
-                           "). \nSi quieres remover este operador coloca cualquier otro valor. \n>>" +
-                           " ");
+          System.out.println("\n" + Colors.CYAN + input + Colors.RESET);
+          System.out.println(" ".repeat(token.index() - 1) + Colors.GREEN + "^" + Colors.RESET);
+          System.out.print(
+            "Ingresa un valor: (" + Colors.GREEN + UNARY_OPERATORS + Colors.RESET +
+            "). \nSi quieres " + Colors.RED +
+            "remover" + Colors.RESET + " este operador coloca cualquier otro valor. \n>> ");
           final var character = UNARY_OPERATIONS.get(scanner.next());
           if (character == null) {
             iterator.remove();
-            System.out.println("Operador eliminado correctamente.");
+            System.out.println(
+              "Operador " + Colors.RED + "eliminado" + Colors.RESET + " correctamente.");
             continue;
           }
           token.setToken(character);
