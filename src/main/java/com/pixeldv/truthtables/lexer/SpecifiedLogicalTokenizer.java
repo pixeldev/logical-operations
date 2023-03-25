@@ -17,16 +17,15 @@ public class SpecifiedLogicalTokenizer extends LogicalTokenizer {
     final @NotNull Deque<Token> tokens
   ) {
     final var lastToken = tokens.peekLast();
-    if (lastToken == null) {
-      throw new IllegalStateException("Invalid operation at " + index + ".");
-    }
     final var valString = String.valueOf(val);
     Token.Type type = null;
     Character symbol = OperationResolver.BINARY_OPERATIONS.get(valString);
     if (symbol != null) {
-      if (lastToken.type() != Token.Type.RIGHT_PARENTHESIS &&
-          lastToken.type() != Token.Type.VAR) {
-        throw new IllegalStateException("Invalid binary operation at " + lastToken.index());
+      if (lastToken != null) {
+        if (lastToken.type() != Token.Type.RIGHT_PARENTHESIS &&
+            lastToken.type() != Token.Type.VAR) {
+          throw new IllegalStateException("Invalid binary operation at " + lastToken.index());
+        }
       }
       type = Token.Type.BINARY_OPERATOR;
     } else {
