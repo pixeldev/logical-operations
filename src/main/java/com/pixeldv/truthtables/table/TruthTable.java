@@ -1,21 +1,31 @@
 package com.pixeldv.truthtables.table;
 
+import com.pixeldv.truthtables.color.Colors;
 import com.pixeldv.truthtables.lexer.Token;
 import com.pixeldv.truthtables.representation.Expression;
 import com.pixeldv.truthtables.representation.NameOperation;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TruthTable {
   private final List<Character> prepositions;
   private final Expression expression;
+  private final List<Map<Character, Expression.Val>> truthValues;
+  private final String prepositionColor;
+  private final String tableColor;
+  private final String trueColor;
+  private final String falseColor;
 
-  public TruthTable(final @NotNull Deque<Token> tokens, final @NotNull Expression expression) {
+  public TruthTable(
+    final @NotNull Deque<Token> tokens,
+    final @NotNull Expression expression,
+    final @NotNull String prepositionColor,
+    final @NotNull String tableColor,
+    final @NotNull String trueColor,
+    final @NotNull String falseColor
+  ) {
+    this.prepositionColor = prepositionColor;
     this.prepositions = new ArrayList<>();
     for (final var token : tokens) {
       if (token.type() == Token.Type.VAR) {
@@ -27,66 +37,109 @@ public class TruthTable {
       }
     }
     this.expression = expression;
+    this.truthValues = this.generateCombinations();
+    this.tableColor = tableColor;
+    this.trueColor = trueColor;
+    this.falseColor = falseColor;
+  }
+
+  public boolean isTautology() {
+    for (final var truthValue : this.truthValues) {
+      if (this.expression.eval(truthValue) == Expression.Val.F) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public boolean isContradiction() {
+    for (final var truthValue : this.truthValues) {
+      if (this.expression.eval(truthValue) == Expression.Val.V) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public @NotNull String createTruthTable() {
     final var builder = new StringBuilder();
     final var prepositionsSize = this.prepositions.size();
+    builder.append(this.prepositionColor)
+      .append(Colors.WHITE_BOLD_BRIGHT);
     for (int i = 0; i < prepositionsSize; i++) {
-      builder.append(this.prepositions.get(i));
+      builder.append(" ")
+        .append(this.prepositions.get(i));
       if (i != prepositionsSize - 1) {
-        builder.append(" | ");
+        builder.append(" ")
+          .append("|");
       }
     }
     final var subExpressions = this.expression.extractNamedExpressions();
     for (final var subExpression : subExpressions) {
+      final var readableForm = subExpression.expression()
+                                 .readableForm();
       builder.append(" | ")
-        .append(subExpression.expression()
-                  .readableForm());
+        .append(readableForm);
     }
     final var expressionReadableForm = this.expression.readableForm();
-    final var expressionReadableFormLength = expressionReadableForm.length() + 1;
     builder.append(" | ")
-      .append(expressionReadableForm).append(" |")
+      .append(expressionReadableForm)
+      .append("  ")
+      .append(Colors.RESET)
       .append(System.lineSeparator());
-    builder.append("-".repeat(builder.length() - 2))
-      .append(System.lineSeparator());
-    final var truthValues = this.generateCombinations();
-    for (final Map<Character, Expression.Val> truthValue : truthValues) {
-      for (int j = 0; j < prepositionsSize; j++) {
-        final var character = this.prepositions.get(j);
-        builder.append(truthValue.get(character)
-                         .toString());
-        if (j != prepositionsSize - 1) {
-          builder.append(" | ");
-        }
+    for (final Map<Character, Expression.Val> truthValue : this.truthValues) {
+      for (final Character character : this.prepositions) {
+        final var val = truthValue.get(character);
+        final var color = this.getColor(val);
+        builder.append(color)
+          .append(" ")
+          .append(Colors.WHITE_BOLD_BRIGHT)
+          .append(val)
+          .append(color)
+          .append(" ")
+          .append(this.tableColor)
+          .append(" ");
       }
       for (final NameOperation subExpression : subExpressions) {
-        final var readableForm = subExpression.expression()
-                                   .readableForm();
-        final var readableFormLength = readableForm.length() + 1;
-        builder.append(" |");
-        if (readableFormLength % 2 == 0) {
-          builder.append(" ".repeat(readableFormLength / 2));
-        } else {
-          builder.append(" ".repeat(readableFormLength / 2 + 1));
-        }
-        builder.append(subExpression.eval(truthValue))
-          .append(" ".repeat(readableFormLength / 2 - 1));
+        this.appendValue(subExpression.expression(), truthValue, builder);
       }
-      builder.append(" |");
-      if (expressionReadableFormLength % 2 == 0) {
-        builder.append(" ".repeat(expressionReadableFormLength / 2));
-      } else {
-        builder.append(" ".repeat(expressionReadableFormLength / 2 + 1));
-      }
-      builder
-        .append(this.expression.eval(truthValue))
-        .append(" ".repeat(expressionReadableFormLength / 2 - 1))
-        .append(" |")
-        .append(System.lineSeparator());
+      this.appendValue(this.expression, truthValue, builder);
+      builder.append(System.lineSeparator());
     }
     return builder.toString();
+  }
+
+  private void appendValue(
+    final @NotNull Expression expression,
+    final @NotNull Map<Character, Expression.Val> truthValue,
+    final @NotNull StringBuilder builder
+  ) {
+    final var readableForm = expression.readableForm();
+    final var readableFormLength = readableForm.length() + 1;
+    final var eval = expression.eval(truthValue);
+    final var color = this.getColor(eval);
+    builder.append(color)
+      .append(" ".repeat(readableFormLength % 2 == 0 ?
+                         readableFormLength / 2 :
+                         readableFormLength / 2 + 1));
+    if (eval == Expression.Val.V) {
+      builder.append(Colors.WHITE_BOLD_BRIGHT)
+        .append("V");
+    } else {
+      builder.append(Colors.WHITE_BOLD_BRIGHT)
+        .append("F");
+    }
+    builder.append(color)
+      .append(" ".repeat(readableFormLength / 2))
+      .append(this.tableColor)
+      .append(" ")
+      .append(Colors.RESET);
+  }
+
+  private @NotNull String getColor(final @NotNull Expression.Val val) {
+    return val == Expression.Val.V ?
+           this.trueColor :
+           this.falseColor;
   }
 
   public @NotNull List<Map<Character, Expression.Val>> generateCombinations() {
