@@ -3,6 +3,7 @@ package com.pixeldv.truthtables.representation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Objects;
 
 public record OrOperation(@NotNull Expression firstExpression, @NotNull Expression secondExpression)
   implements BinaryOperation {
@@ -30,6 +31,22 @@ public record OrOperation(@NotNull Expression firstExpression, @NotNull Expressi
   public @NotNull String readableForm() {
     return this.firstExpression.readableForm() + " " + SYMBOL + " " +
            this.secondExpression.readableForm();
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    OrOperation that = (OrOperation) o;
+    return firstExpression.equals(that.firstExpression) &&
+           secondExpression.equals(that.secondExpression);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(firstExpression, secondExpression);
   }
 
   @Override

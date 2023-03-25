@@ -2,9 +2,9 @@ package com.pixeldv.truthtables.representation;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public interface Expression {
@@ -15,8 +15,8 @@ public interface Expression {
 
   @NotNull Type expressionType();
 
-  default @NotNull List<NameOperation> extractNamedExpressions() {
-    final var expressions = new ArrayList<NameOperation>();
+  default @NotNull Set<NameOperation> extractNamedExpressions() {
+    final var expressions = new LinkedHashSet<NameOperation>();
     final var aliasesIndexes = new AtomicInteger(0);
     this.extractNamedExpressions(aliasesIndexes, expressions);
     return expressions;
@@ -24,7 +24,7 @@ public interface Expression {
 
   default void extractNamedExpressions(
     final @NotNull AtomicInteger aliasesIndexes,
-    final @NotNull List<NameOperation> expressions
+    final @NotNull Set<NameOperation> expressions
   ) {
     if (expressionType() == Type.OPERATION) {
       final Operation op = (Operation) this;
@@ -49,7 +49,8 @@ public interface Expression {
   @NotNull Expression clone();
 
   default boolean equivalent(final @NotNull Expression other) {
-    return this.readableForm().equals(other.readableForm());
+    return this.readableForm()
+             .equals(other.readableForm());
   }
 
   enum Val {V, F, UNDEFINED}

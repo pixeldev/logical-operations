@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class NameOperation implements UnaryOperation {
   private static final List<Character> ALIASES = List.of(
@@ -39,6 +40,21 @@ public class NameOperation implements UnaryOperation {
 
   public @NotNull Expression expression() {
     return this.expression;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    NameOperation that = (NameOperation) o;
+    return Objects.equals(expression, that.expression);
+  }
+
+  @Override
+  public int hashCode() {
+    return expression.hashCode();
   }
 
   @Override

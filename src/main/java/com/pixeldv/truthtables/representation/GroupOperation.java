@@ -3,6 +3,7 @@ package com.pixeldv.truthtables.representation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Objects;
 
 public record GroupOperation(@NotNull Expression expression) implements UnaryOperation {
   @Override
@@ -18,6 +19,21 @@ public record GroupOperation(@NotNull Expression expression) implements UnaryOpe
   @Override
   public @NotNull Type unaryOperationType() {
     return Type.GROUP;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
+    GroupOperation that = (GroupOperation) o;
+    return expression.equals(that.expression);
+  }
+
+  @Override
+  public int hashCode() {
+    return expression.hashCode();
   }
 
   @Override
