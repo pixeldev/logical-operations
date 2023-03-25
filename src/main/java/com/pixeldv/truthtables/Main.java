@@ -1,5 +1,6 @@
 package com.pixeldv.truthtables;
 
+import com.pixeldv.truthtables.color.Colors;
 import com.pixeldv.truthtables.lexer.ResolvableLogicalTokenizer;
 import com.pixeldv.truthtables.lexer.SpecifiedLogicalTokenizer;
 import com.pixeldv.truthtables.parser.ExpressionParser;
@@ -57,14 +58,26 @@ public class Main {
 
     if (option == 2) {
       final var operationResolver = new OperationResolver(input, specifiedTokens);
-      operationResolver.scan(scanner);
+      operationResolver.resolve(scanner);
     }
 
     final var specifiedExpression = ExpressionParser.parse(new LinkedList<>(specifiedTokens));
 
+    if (specifiedExpression == null) {
+      System.out.println("Invalid expression.");
+      main(args);
+      return;
+    }
+
     System.out.println("Specified expression: " + specifiedExpression.readableForm());
     System.out.println("\nTruth table: ");
-    System.out.println(new TruthTable(specifiedTokens, specifiedExpression).createTruthTable());
+    System.out.println(new TruthTable(
+      specifiedTokens,
+      specifiedExpression,
+      Colors.CYAN_BACKGROUND,
+      Colors.CYAN_BACKGROUND_BRIGHT,
+      Colors.GREEN_BACKGROUND,
+      Colors.RED_BACKGROUND).createTruthTable());
   }
 }
 

@@ -1,5 +1,6 @@
 package com.pixeldv.truthtables;
 
+import com.pixeldv.truthtables.color.Colors;
 import com.pixeldv.truthtables.lexer.ResolvableLogicalTokenizer;
 import com.pixeldv.truthtables.lexer.Token;
 import com.pixeldv.truthtables.parser.ExpressionParser;
@@ -79,7 +80,7 @@ public class Bootstrap {
     final Deque<Token> firstExpressionTokens
   ) {
     final var operationResolver = new OperationResolver(firstExpression, firstExpressionTokens);
-    operationResolver.scan(scanner);
+    operationResolver.resolve(scanner);
 
     final var specifiedExpression = ExpressionParser.parse(new LinkedList<>(firstExpressionTokens));
 
@@ -93,7 +94,11 @@ public class Bootstrap {
     System.out.println("\nSu tabla de verdad es: ");
     System.out.println(new TruthTable(
       firstExpressionTokens,
-      specifiedExpression).createTruthTable());
+      specifiedExpression,
+      Colors.CYAN_BACKGROUND,
+      Colors.CYAN_BACKGROUND_BRIGHT,
+      Colors.GREEN_BACKGROUND,
+      Colors.RED_BACKGROUND).createTruthTable());
     return true;
   }
 }
