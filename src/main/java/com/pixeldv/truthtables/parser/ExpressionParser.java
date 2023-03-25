@@ -34,14 +34,13 @@ public final class ExpressionParser {
         }
         break;
       }
-      if (token.type() != Token.Type.UNARY_OPERATOR && token.type() != Token.Type.BINARY_OPERATOR) {
+      if (tokenType != Token.Type.UNARY_OPERATOR && tokenType != Token.Type.BINARY_OPERATOR) {
         lastOperation = operationsStack.pollLast();
       } else {
         lastOperation = operationsStack.peekLast();
       }
       if (lastOperation != null && tokenType != Token.Type.VAR &&
-          tokenType !=
-          Token.Type.LEFT_PARENTHESIS &&
+          tokenType != Token.Type.LEFT_PARENTHESIS &&
           tokenType != Token.Type.UNARY_OPERATOR) {
         throw new IllegalStateException("Invalid use of operator at " + token.index());
       }
