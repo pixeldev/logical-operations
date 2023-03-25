@@ -12,10 +12,19 @@ public class Token {
   private final Type type;
 
   public Token(final char token, final int index, final @NotNull Type type) {
+    this(token, index, type != Type.BINARY_OPERATOR && type != Type.UNARY_OPERATOR, type);
+  }
+
+  public Token(
+    final char token,
+    final int index,
+    final boolean resolved,
+    final @NotNull Type type
+  ) {
     this.token = token;
     this.index = index;
+    this.resolved = resolved;
     this.type = type;
-    this.resolved = type != Type.BINARY_OPERATOR && type != Type.UNARY_OPERATOR;
   }
 
   public char token() {

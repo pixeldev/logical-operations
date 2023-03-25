@@ -38,8 +38,7 @@ public class SpecifiedLogicalTokenizer extends LogicalTokenizer {
     if (symbol == null) {
       return null;
     }
-    final var token = new Token(symbol, index, type);
-    token.setResolved(true);
+    final var token = new Token(symbol, index, true, type);
     tokens.add(token);
     return token;
   }
