@@ -39,14 +39,18 @@ public class Inferences {
         .conclusion("([ ]p [ ] [ ]q) [ ] [ ]r")
         .build();
     final var inferenceResolver = new InferenceResolver(inferenceSnapshot);
-    final var inferenceTokens = inferenceResolver.resolve(scanner);
-    if (inferenceTokens == null) {
-      main(args);
-      return;
-    }
-    final var inference = new Inference(inferenceTokens);
+    final var premisesTokens = inferenceResolver.resolvePremises(scanner);
+    final var inferenceTokens = inferenceResolver.createInferenceTokens(premisesTokens);
+    final var inference = new Inference(premisesTokens, inferenceTokens);
     System.out.println();
-    System.out.println("La expresión final es: " + Colors.CYAN + inference.getExpression()
+    System.out.println("La estructura es: " + Colors.CYAN);
+    final var expressions = inference.getExpressions();
+    for (int i = 0; i < expressions.size() - 1; i++) {
+      System.out.println("P" + (i + 1) + ". " + expressions.get(i).readableForm());
+    }
+    System.out.println(Colors.CYAN_BRIGHT + "------------------" + Colors.CYAN);
+    System.out.println("C: " + expressions.get(expressions.size() - 1).readableForm() + Colors.RESET);
+    System.out.println("La expresión a validar es: " + Colors.CYAN + inference.getInferenceExpression()
                                                                    .readableForm() + Colors.RESET);
     System.out.println("La inferencia es " + (inference.isTautology() ?
                                               Colors.GREEN + "válida" :
