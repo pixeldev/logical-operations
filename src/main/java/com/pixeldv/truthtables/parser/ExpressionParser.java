@@ -108,6 +108,12 @@ public final class ExpressionParser {
           operandStack.removeFirst());
         operandStack.add(expression);
       }
+      case XOrOperation.SYMBOL -> {
+        expression = new XOrOperation(
+          operandStack.removeFirst(),
+          operandStack.removeFirst());
+        operandStack.add(expression);
+      }
       case NegationOperation.SYMBOL -> {
         expression = new NegationOperation(operandStack.removeLast());
         operandStack.add(expression);

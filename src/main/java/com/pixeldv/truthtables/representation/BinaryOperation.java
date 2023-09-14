@@ -15,5 +15,5 @@ public interface BinaryOperation extends Operation {
     return Operation.Type.BINARY;
   }
 
-  enum Type {AND, OR, IF, IF_ONLY_IF}
+  enum Type {AND, OR, IF, IF_ONLY_IF, XOR}
 }

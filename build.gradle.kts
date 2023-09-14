@@ -9,7 +9,7 @@ tasks {
 
   jar {
     manifest {
-      attributes["Main-Class"] = "com.pixeldv.truthtables.Inferences"
+      attributes["Main-Class"] = "com.pixeldv.truthtables.Main"
     }
   }
 }

@@ -7,6 +7,7 @@ import com.pixeldv.truthtables.representation.IfOnlyIfOperation;
 import com.pixeldv.truthtables.representation.IfOperation;
 import com.pixeldv.truthtables.representation.NegationOperation;
 import com.pixeldv.truthtables.representation.OrOperation;
+import com.pixeldv.truthtables.representation.XOrOperation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Deque;
@@ -29,6 +30,7 @@ public class OperationResolver {
     BINARY_OPERATIONS.put("|", OrOperation.SYMBOL);
     BINARY_OPERATIONS.put("∨", OrOperation.SYMBOL);
     BINARY_OPERATIONS.put("v", OrOperation.SYMBOL);
+    BINARY_OPERATIONS.put(Character.toString(XOrOperation.SYMBOL), XOrOperation.SYMBOL);
     BINARY_OPERATIONS.put("->", IfOperation.SYMBOL);
     BINARY_OPERATIONS.put(">", IfOperation.SYMBOL);
     BINARY_OPERATIONS.put("→", IfOperation.SYMBOL);
